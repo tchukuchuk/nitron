@@ -1,11 +1,13 @@
 module Spry
   class Entity < NSManagedObject
-    def self.inherited(subclass)
-      subclass.instance_variable_set(:@attributes, [])
-    end
+    # TODO: flesh this out
+    ATTRIBUTE_TYPES = {
+      String  => NSStringAttributeType,
+      Time    => NSDateAttributeType
+    }
 
-    def self.entity
-      @entity ||= begin
+    def self.entityDescription
+      @entityDescription ||= begin
         entity = NSEntityDescription.alloc.init
         entity.name = self.name
         entity.managedObjectClassName = entity.name
@@ -19,16 +21,23 @@ module Spry
       attributeDescription = NSAttributeDescription.alloc.init
       attributeDescription.name = name.to_s
       attributeDescription.optional = false
+      attributeDescription.attributeType = ATTRIBUTE_TYPES[options[:type]]
 
-      if options[:type] == String
-        attributeDescription.attributeType = NSStringAttributeType
-      elsif options[:type] == Time
-        attributeDescription.attributeType = NSDateAttributeType
-      else
+      unless attributeDescription.attributeType
         raise "Unknown field type: #{options[:type]}"
       end
 
       @attributes << attributeDescription
+    end
+
+    def self.inherited(subclass)
+      subclass.instance_variable_set(:@attributes, [])
+
+      registeredEntityClasses << subclass
+    end
+
+    def self.registeredEntityClasses
+      @registeredEntityClasses ||= []
     end
   end
 end

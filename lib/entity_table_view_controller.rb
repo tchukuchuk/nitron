@@ -1,6 +1,5 @@
 module Spry
   class EntityTableViewController < UITableViewController
-    attr_accessor :context
 
 protected
 
@@ -70,8 +69,12 @@ protected
       selected(entity)
     end
 
+protected
+
     def fetchedResultsController
       @fetchedResultsController ||= begin
+        context = UIApplication.sharedApplication.delegate.managedObjectContext
+
         request = NSFetchRequest.alloc.init
         request.entity = NSEntityDescription.entityForName(self.class.entity, inManagedObjectContext:context)
         request.fetchBatchSize = self.class.batchSize
