@@ -24,8 +24,6 @@ class ArtistsController < Spry::EntityTableViewController
 end
 ```
 
-NOTE: You must setup the context property on the controller with a properly initialized NSManagedObjectContext beforehand.
-
 Declarative entity specification:
 
 ```ruby
