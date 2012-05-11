@@ -78,6 +78,7 @@ protected
         request = NSFetchRequest.alloc.init
         request.entity = NSEntityDescription.entityForName(self.class.entity, inManagedObjectContext:context)
         request.fetchBatchSize = self.class.batchSize
+        request.includesPendingChanges = false
         request.sortDescriptors = [NSSortDescriptor.alloc.initWithKey(self.class.sortBy, ascending:true)]
 
         controller = NSFetchedResultsController.alloc.initWithFetchRequest(request,

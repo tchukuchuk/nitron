@@ -6,6 +6,10 @@ module Spry
       Time    => NSDateAttributeType
     }
 
+    def self.context
+      UIApplication.sharedApplication.delegate.managedObjectContext
+    end
+
     def self.entityDescription
       @entityDescription ||= begin
         entity = NSEntityDescription.alloc.init
@@ -38,6 +42,27 @@ module Spry
 
     def self.registeredEntityClasses
       @registeredEntityClasses ||= []
+    end
+
+    def self.new
+      self.alloc.initWithEntity(entityDescription, insertIntoManagedObjectContext:nil)
+    end
+
+    def destroy
+      self.class.context.deleteObject(self)
+
+      save()
+    end
+
+    def save
+      unless isDeleted
+        self.class.context.insertObject(self) if managedObjectContext == nil
+      end
+
+      error_ptr = Pointer.new(:object)
+      unless self.class.context.save(error_ptr)
+        raise "Error when saving the model: #{error_ptr[0].description}"
+      end
     end
   end
 end
