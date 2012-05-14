@@ -1,4 +1,4 @@
-module Spry
+module Nitron
   class TableViewController < UITableViewController
     def self.collection(&block)
       options[:collection] = block

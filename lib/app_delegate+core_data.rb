@@ -22,7 +22,7 @@ class AppDelegate
   def persistentStoreCoordinator
     @coordinator ||= begin
       model = NSManagedObjectModel.alloc.init
-      model.entities = Spry::Entity.registeredEntityClasses.map(&:entityDescription)
+      model.entities = Nitron::Entity.registeredEntityClasses.map(&:entityDescription)
 
       NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(model)
     end

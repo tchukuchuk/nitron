@@ -1,4 +1,4 @@
-module Spry
+module Nitron
   class Entity < NSManagedObject
     # TODO: flesh this out
     ATTRIBUTE_TYPES = {

@@ -1,4 +1,4 @@
-module Spry
+module Nitron
   class EntityTableViewController < UITableViewController
 
 protected
