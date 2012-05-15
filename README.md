@@ -3,7 +3,11 @@ Nitron
 
 Experiments in wrapping the iOS SDK in a more Ruby-esque manner.
 
-Samples
+Examples
+-----------
+https://github.com/mattgreen/nitron-examples 
+
+Documentation
 ------------
 
 Easily create a UITableViewController that leverages
