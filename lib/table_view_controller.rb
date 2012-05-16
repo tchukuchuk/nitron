@@ -1,5 +1,15 @@
 module Nitron
   class TableViewController < UITableViewController
+    BAR_BUTTON_STYLES = {
+      :action   => UIBarButtonSystemItemAction,
+      :add      => UIBarButtonSystemItemAdd,
+      :cancel   => UIBarButtonSystemItemCancel,
+      :compose  => UIBarButtonSystemItemCompose,
+      :done     => UIBarButtonSystemItemDone,
+      :edit     => UIBarButtonSystemItemEdit,
+      :save     => UIBarButtonSystemItemSave
+    }
+
     def self.collection(&block)
       options[:collection] = block
     end
@@ -12,7 +22,9 @@ module Nitron
         :selected     => lambda { |entity| },
         :groupBy      => nil,
         :groupIndex   => false,
-        :style        => UITableViewCellStyleSubtitle
+        :style        => UITableViewCellStyleSubtitle,
+        :leftButton   => nil,
+        :rightButton  => nil
       }
     end
 
@@ -23,6 +35,30 @@ module Nitron
 
     def self.layout(&block)
       options[:layout] = block
+    end
+
+    def self.left_button(opts, &block)
+      if opts[:style].is_a?(Symbol)
+        opts[:style] = BAR_BUTTON_STYLES[opts[:style]]
+      end
+
+      unless opts[:style]
+        raise "Must specify a bar button style for navigation bar"
+      end
+
+      options[:leftButton] = opts.merge(:selected => block)
+    end
+
+    def self.right_button(opts, &block)
+      if opts[:style].is_a?(Symbol)
+        opts[:style] = BAR_BUTTON_STYLES[opts[:style]]
+      end
+
+      unless opts[:style]
+        raise "Must specify a bar button style for navigation bar"
+      end
+
+      options[:rightButton] = opts.merge(:selected => block)
     end
 
     def self.selected(&block)
@@ -132,6 +168,18 @@ module Nitron
 
     def viewWillAppear(animated)
       super
+
+      if self.class.options[:leftButton]
+        self.navigationItem.setLeftBarButtonItem(UIBarButtonItem.alloc.initWithBarButtonSystemItem(self.class.options[:leftButton][:style],
+                                                                                                   target:self.class.options[:leftButton][:selected],
+                                                                                                   action:"call"))
+      end
+
+      if self.class.options[:rightButton]
+        self.navigationItem.setRightBarButtonItem(UIBarButtonItem.alloc.initWithBarButtonSystemItem(self.class.options[:rightButton][:style],
+                                                                                                    target:self.class.options[:rightButton][:selected],
+                                                                                                    action:"call"))
+      end
 
       if self.class.options[:title].respond_to?(:call)
         self.title = self.instance_eval(&self.class.options[:title])
