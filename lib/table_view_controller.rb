@@ -6,12 +6,13 @@ module Nitron
 
     def self.options
       @options ||= {
-        :collection => lambda { },
-        :title      => self.name.gsub("ViewController", ""),
-        :layout     => lambda { |cell, entity| },
-        :selected   => lambda { |entity| },
-        :groupBy    => nil,
-        :groupIndex => false
+        :collection   => lambda { },
+        :title        => self.name.gsub("ViewController", ""),
+        :layout       => lambda { |cell, entity| },
+        :selected     => lambda { |entity| },
+        :groupBy      => nil,
+        :groupIndex   => false,
+        :style        => UITableViewCellStyleSubtitle
       }
     end
 
@@ -26,6 +27,23 @@ module Nitron
 
     def self.selected(&block)
       options[:selected] = block
+    end
+
+    def self.style(value)
+      if value.is_a?(Symbol)
+        case value
+        when :default
+          value = UITableViewCellStyleDefault
+        when :subtitle
+          value = UITableViewCellStyleSubtitle
+        when :value1
+          value = UITableViewCellStyleValue1
+        when :value2
+          value = UITableViewCellStyleValue2
+        end
+      end
+
+      options[:style] = value
     end
 
     def self.title(title=nil, &block)
@@ -72,7 +90,7 @@ module Nitron
     def tableView(tableView, cellForRowAtIndexPath:indexPath)
       @cellReuseIdentifier ||= "#{self.class.options[:entity_name]}Cell"
       cell = view.dequeueReusableCellWithIdentifier(@cellReuseIdentifier) ||
-        UITableViewCell.alloc.initWithStyle(UITableViewCellStyleSubtitle, reuseIdentifier:@cellReuseIdentifier)
+        UITableViewCell.alloc.initWithStyle(self.class.options[:style], reuseIdentifier:@cellReuseIdentifier)
 
       self.instance_exec(cell, collection.objectAtIndexPath(indexPath), &self.class.options[:layout])
 
