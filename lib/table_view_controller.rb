@@ -133,12 +133,16 @@ module Nitron
         1
       end
 
+      def numberOfRowsInSection(section)
+        @collection.size
+      end
+
       def objectAtIndexPath(indexPath)
         @collection[indexPath.row]
       end
 
-      def numberOfRowsInSection(section)
-        @collection.size
+      def titleForSection(section)
+        nil
       end
     end
 
@@ -158,16 +162,16 @@ module Nitron
         end
       end
 
-      def objectAtIndexPath(indexPath)
-        @controller.objectAtIndexPath(indexPath)
-      end
-
       def numberOfRowsInSection(section)
         @controller.sections[section].numberOfObjects
       end
 
       def numberOfSections
         @controller.sections.size
+      end
+
+      def objectAtIndexPath(indexPath)
+        @controller.objectAtIndexPath(indexPath)
       end
 
       def sectionIndexTitles
