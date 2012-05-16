@@ -9,8 +9,15 @@ module Nitron
         :collection => lambda { },
         :title      => self.name.gsub("ViewController", ""),
         :layout     => lambda { |cell, entity| },
-        :selected   => lambda { |entity| }
+        :selected   => lambda { |entity| },
+        :groupBy    => nil,
+        :groupIndex => false
       }
+    end
+
+    def self.group_by(name, opts={})
+      options[:groupBy] = name.to_s
+      options[:groupIndex] = opts[:index] || false
     end
 
     def self.layout(&block)
@@ -51,7 +58,7 @@ module Nitron
         when Array
           ArrayAdapter.new(items)
         when NSFetchRequest
-          EntityAdapter.new(items, self)
+          EntityAdapter.new(items, self, self.class.options[:groupBy])
         else
           raise "collection block must return either an Array or an NSFetchRequest"
         end
@@ -80,12 +87,34 @@ module Nitron
       collection.numberOfRowsInSection(section)
     end
 
+    def numberOfSectionsInTableView(tableView)
+      collection.numberOfSections
+    end
+
+    def sectionIndexTitlesForTableView(tableView)
+      if self.class.options[:groupIndex]
+        collection.sectionIndexTitles
+      else
+        nil
+      end
+    end
+
+    def sectionForSectionIndexTitle(title, atIndex:index)
+      collection.sectionForSectionIndexTitle(title, index)
+    end
+
+    def tableView(tableView, titleForHeaderInSection:section)
+      collection.titleForSection(section)
+    end
+
     def viewDidLoad
       view.dataSource = self
       view.delegate   = self
     end
 
     def viewWillAppear(animated)
+      super
+
       if self.class.options[:title].respond_to?(:call)
         self.title = self.instance_eval(&self.class.options[:title])
       else
@@ -100,6 +129,10 @@ module Nitron
         @collection = collection
       end
 
+      def numberOfSections
+        1
+      end
+
       def objectAtIndexPath(indexPath)
         @collection[indexPath.row]
       end
@@ -110,12 +143,12 @@ module Nitron
     end
 
     class EntityAdapter
-      def initialize(collection, owner)
+      def initialize(collection, owner, sectionNameKeyPath)
         context = UIApplication.sharedApplication.delegate.managedObjectContext
 
         @controller = NSFetchedResultsController.alloc.initWithFetchRequest(collection,
                                                                             managedObjectContext:context,
-                                                                            sectionNameKeyPath:nil,
+                                                                            sectionNameKeyPath:sectionNameKeyPath,
                                                                             cacheName:nil)
         @controller.delegate = owner
 
@@ -131,6 +164,22 @@ module Nitron
 
       def numberOfRowsInSection(section)
         @controller.sections[section].numberOfObjects
+      end
+
+      def numberOfSections
+        @controller.sections.size
+      end
+
+      def sectionIndexTitles
+        @controller.sectionIndexTitles
+      end
+
+      def sectionForSectionIndexTitle(title, atIndex:index)
+        @collection.sectionForSectionIndexTitle(title, atIndex:index)
+      end
+
+      def titleForSection(section)
+        @controller.sections[section].name
       end
     end
   end
