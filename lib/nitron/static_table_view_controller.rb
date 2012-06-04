@@ -30,8 +30,7 @@ module Nitron
     end
 
     def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-      dataBinder = Nitron::UI::DataBinder.new
-      dataBinder.bind(model, cell.contentView, :observe => false)
+      Nitron::UI::DataBinder.shared.bind(model, cell)
     end
 
     def viewWillAppear(animated)

@@ -60,8 +60,7 @@ module Nitron
     def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
       model = dataSource.objectAtIndexPath(indexPath)
 
-      dataBinder = Nitron::UI::DataBinder.new
-      dataBinder.bind(model, cell, :observe => false)
+      Nitron::UI::DataBinder.shared.bind(model, cell)
     end
 
     def viewDidLoad

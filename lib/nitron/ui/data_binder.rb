@@ -1,6 +1,10 @@
 module Nitron
 module UI
   class DataBinder
+    def self.shared
+      @singleton ||= alloc.init
+    end
+
     def bind(model, view, options={})
       bindings = []
 
