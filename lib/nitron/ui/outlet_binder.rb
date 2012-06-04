@@ -22,7 +22,7 @@ module UI
         handler = attributes[:handler]
 
         unless controller.respond_to?(outlet)
-          unless attributes[:default]
+          unless attributes[:default] || controller.is_a?(Nitron::StaticTableViewController) # TODO: hacky
             puts "Unable to find outlet for '#{outlet}'. Did you specify it in your XIB/Storyboard?"
           end
 

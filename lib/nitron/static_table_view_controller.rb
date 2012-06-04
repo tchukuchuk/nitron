@@ -11,14 +11,11 @@ module Nitron
     def tableView(tableView, didSelectRowAtIndexPath:indexPath)
       cell = tableView.cellForRowAtIndexPath(indexPath)
 
-      if cell.respond_to?(:binding)
-        binding = cell.binding
-        if binding && binding.length > 0
-          method = binding + "Selected"
+      if outlet = cell.outlets.first
+        handler = self.class.outletHandlers[outlet[0]]
 
-          if respond_to?(method)
-            send(method)
-          end
+        if handler
+          self.instance_eval(&handler[:handler])
         end
       end
     end

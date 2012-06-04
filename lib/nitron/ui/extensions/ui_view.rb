@@ -11,7 +11,7 @@ class UIView
     if key == "dataBinding" || key == "outlet"
       raise "Runtime attribute '#{key}' must be a String (declared on #{self.class.name})" unless value.is_a?(String)
 
-      container = superview
+      container = self
       while container.superview
         container = container.superview
       end
