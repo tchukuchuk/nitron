@@ -11,9 +11,9 @@ module Nitron
 
     def self.options
       @options ||= {
-        :collection   => lambda { },
-        :groupBy      => nil,
-        :groupIndex   => false,
+        collection: lambda { [] },
+        groupBy:    nil,
+        groupIndex: false,
       }
     end
 
@@ -39,9 +39,15 @@ module Nitron
     end
 
     def prepareForSegue(segue, sender:sender)
-      model = dataSource.objectAtIndexPath(view.indexPathForSelectedRow)
+      model = nil
 
-      if sender.is_a?(UITableViewCell)
+      if view.respond_to?(:indexPathForSelectedRow)
+        if view.indexPathForSelectedRow
+          model = dataSource.objectAtIndexPath(view.indexPathForSelectedRow)
+        end
+      end
+
+      if model
         controller = segue.destinationViewController
         if controller.respond_to?(:model=)
           controller.model = model
