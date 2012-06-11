@@ -2,9 +2,9 @@ module Nitron
 module UI
   class OutletBinder
     def bind(controller, view)
+      # Emulate IB's outlets by using KVC.
       view.outlets.each do |outlet, subview|
-        controller.instance_variable_set("@#{outlet}", subview)
-        controller.class.send(:attr_reader, outlet) unless controller.class.respond_to?(outlet)
+        controller.setValue(subview, forKey:outlet)
       end
     end
   end
