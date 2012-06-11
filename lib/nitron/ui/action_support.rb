@@ -11,7 +11,7 @@ module UI
       end
 
       def actions
-        @_outletHandlers ||= {
+        @_actions ||= {
           "cancel" => { :handler => proc { close }, :default => true },
           "done"   => { :handler => proc { close }, :default => true }
         }

@@ -63,17 +63,10 @@ module Nitron
       end
     end
 
-    def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-      model = dataSource.objectAtIndexPath(indexPath)
-
-      Nitron::UI::DataBinder.shared.bind(model, cell)
-    end
-
     def viewDidLoad
       super
 
       view.dataSource = dataSource
-      view.delegate = self
     end
 
   protected

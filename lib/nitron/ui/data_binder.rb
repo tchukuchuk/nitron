@@ -6,15 +6,24 @@ module UI
     end
 
     def bind(model, view, options={})
-      bindings = []
-
-      view.dataBindings.each do |keyPath, subview|
-        if subview.respond_to?(:text=)
-          subview.text = model.valueForKeyPath(keyPath)
-        end
+      if view.is_a?(UITableView)
+        view.delegate = DataBoundTableDelegate.alloc.initWithDelegate(view.delegate)
+        return [view.delegate]
       end
 
-      bindings
+      view.dataBindings.each do |keyPath, subview|
+        bindControl(model, subview, keyPath)
+      end
+
+      nil
+    end
+
+  private
+
+    def bindControl(model, control, keyPath)
+      if control.respond_to?(:text=)
+        control.text = model.valueForKeyPath(keyPath)
+      end
     end
   end
 end

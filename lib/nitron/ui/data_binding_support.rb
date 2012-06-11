@@ -1,6 +1,18 @@
 module Nitron
 module UI
   module DataBindingSupport
+    def dealloc
+      if @_bindings
+        @_bindings = nil
+      end
+
+      if @_model
+        @_model = nil
+      end
+
+      super
+    end
+
     def model
       @_model
     end
@@ -14,7 +26,7 @@ module UI
     def viewDidLoad
       super
 
-      DataBinder.shared.bind(model, view)
+      @_bindings = DataBinder.shared.bind(model, view)
     end
   end
 end

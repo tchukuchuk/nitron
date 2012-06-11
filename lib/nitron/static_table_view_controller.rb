@@ -26,15 +26,12 @@ module Nitron
       cell.bounds.size.height
     end
 
-    def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
-      Nitron::UI::DataBinder.shared.bind(model, cell)
-    end
-
     def viewWillAppear(animated)
-      super
-
       view.dataSource = @_dataSource
       view.delegate = self
+
+      # The data binding module may wrap view.delegate, so run it after we've set up.
+      super
     end
   end
 end
