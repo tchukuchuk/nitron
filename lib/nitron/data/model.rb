@@ -81,6 +81,12 @@ module Nitron
       self.class.destroy(self)
     end
 
+    def inspect
+      properties = entity.properties.map { |property| "#{property.name}: #{valueForKey(property.name).inspect}" }
+
+      "#<#{entity.name} #{properties.join(", ")}>"
+    end
+
     def save
       unless context = managedObjectContext
         context = UIApplication.sharedApplication.delegate.managedObjectContext
