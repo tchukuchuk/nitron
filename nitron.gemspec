@@ -4,8 +4,8 @@ require File.expand_path('../lib/nitron/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Matt Green"]
   gem.email         = ["mattgreenrocks@gmail.com"]
-  gem.description   = "An opinionated iOS framework."
-  gem.summary       = "An opinionated iOS framework."
+  gem.description   = "Turbocharged iOS development via RubyMotion"
+  gem.summary       = "Turbocharged iOS development via RubyMotion"
   gem.homepage      = "https://github.com/mattgreen/nitron"
 
   gem.files         = `git ls-files`.split($\)
@@ -15,5 +15,4 @@ Gem::Specification.new do |gem|
   gem.version       = Nitron::VERSION
 
   gem.add_dependency 'motion-cocoapods', '>= 1.0.1'
-  #gem.add_development_dependency 'motion-redgreen'
 end
