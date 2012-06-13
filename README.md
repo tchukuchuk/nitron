@@ -9,6 +9,30 @@ abstractions atop the strong foundation present in the iOS SDK.
 
 This first release focuses on making Storyboard-based workflows enjoyable.
 
+Installation
+----------
+Add the following line to your `Gemfile`:
+
+`gem "nitron"`
+
+If you haven't already, update your Rakefile to use Bundler. Insert the
+following immediately before `Motion::Project::App.setup`:
+
+```ruby
+require 'rubygems'
+require 'bundler'
+
+Bundler.require
+```
+
+Then, update your bundle:
+
+`bundle`
+
+And build your application:
+
+`rake`
+
 Example
 ------
 A modal view controller responsible for creating new `Tasks`:
