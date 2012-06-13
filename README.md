@@ -75,7 +75,7 @@ into your existing controllers as needed.
 
 Tutorial
 ----------
-TBD
+https://github.com/mattgreen/nitron/wiki/Tutorial
 
 Examples
 ----------
@@ -89,3 +89,9 @@ Caveats
   Future releases will expand the DSL to support additional events.
 * CoreData needs support for relationships and migrations.
 
+License
+-------
+
+Nitron is released under the MIT license:
+
+* http://www.opensource.org/licenses/MIT
