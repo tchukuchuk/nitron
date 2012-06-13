@@ -7,22 +7,35 @@ Nitron is an opinionated, loosely-coupled set of RubyMotion components designed 
 development, especially with simpler iOS apps. It provides meaningful
 abstractions atop the strong foundation present in the iOS SDK.
 
-Philosophy
------------
-We don't aim to rewrite the iOS dev ecosystem in Ruby. Instead, we strive to
-make the existing tools work well for RubyMotion development. Why?
-Because, currently, there are some things that XCode is better at than the community
-alternatives: simple, graphical layouts, and CoreData-based data modeling. This also has a nice secondary benefit, namely that of less 'aftermarket' code, and thus smaller binary size.
-
-Please understand that we're not committed to XCode as much as we are committed to productivity over politics. Currently, the best way to Get Things Done is to drop into XCode occasionally. We're very interested in workflows that remove XCode entirely, but we're not there yet.
-
 This first release focuses on making Storyboard-based workflows enjoyable.
+
+Example
+------
+A modal view controller responsible for creating new `Tasks`:
+
+```ruby
+class TaskCreateViewController < Nitron::ViewController
+  # The on class method is part of Nitron's Action DSL.
+  # It wires the provided block to be an event handler for the specified outlet using the iOS target/action pattern.
+  on :cancel do
+    close
+  end
+
+  # Nitron emulates 'native' outlet support, allowing you to easily define outlets through Xcode.
+  # The titleField and datePicker methods are created upon initial load by using metadata contained in the Storyboard.
+  on :save do
+    Task.create(title: titleField.text, due: datePicker.date)
+
+    close
+  end
+end
+```
 
 Features
 ----------
 
 * **Data Binding** - declaratively bind your model data to controls, either
-  via code or IB
+  via code or Interface Builder
 * **Outlet Support** - expose controls to your controllers via Interface Builder
 * **Action Support** - Ruby DSL to attach event handlers to outlets
 * **CoreData Models** - beginnings of a CoreData model abstraction uses
@@ -34,7 +47,7 @@ responsibilities. Glue code is a perfect target for metaprogramming, so
 we're focusing on making beautiful controllers presently.
 
 We're also careful to make these features modular, so you can mix them
-into your controllers as needed.
+into your existing controllers as needed.
 
 Tutorial
 ----------
