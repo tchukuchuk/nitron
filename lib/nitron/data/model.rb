@@ -89,7 +89,7 @@ module Nitron
     end
     
     def new_record?
-      committedValuesForKeys(nil).empty?
+      managedObjectContext.nil?
     end
     
     def valid?
@@ -130,13 +130,16 @@ module Nitron
       end
 
       error = Pointer.new(:object)
-      raise Nitron::RecordInvalid, self unless context.save(error)
+      unless context.save(error)
+        managedObjectContext.deleteObject(self)
+        raise Nitron::RecordInvalid, self and return false
+      end
       true
     end
     
     def save
       begin
-        save 
+        save!
       rescue Nitron::RecordInvalid => e
         return false
       end
