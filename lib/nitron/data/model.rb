@@ -4,6 +4,14 @@ module Nitron
       def all
         Data::Relation.alloc.initWithClass(self)
       end
+      
+      def pluck(column)
+        all.pluck(column)
+      end
+      
+      def distinct
+        all.distinct
+      end
 
       def create(attributes={})
         model = new(attributes)
