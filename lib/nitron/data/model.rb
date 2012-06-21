@@ -6,7 +6,7 @@ module Nitron
       end
       
       def count
-        all.count
+        relation.count
       end
 
       def create(attributes={})
