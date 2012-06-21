@@ -67,6 +67,9 @@ module Nitron
         if method.start_with?("find_by_")
           attribute = method.gsub("find_by_", "")
           relation.where("#{attribute} = ?", *args).first
+        elsif method.start_with?("find_all_by_")
+          attribute = method.gsub("find_all_by_", "")
+          relation.where("#{attribute} = ?", *args).to_a
         else
           super
         end
@@ -81,7 +84,7 @@ module Nitron
       end
 
       def respond_to?(method)
-        if method.start_with?("find_by_")
+        if method.start_with?("find_by_") || method.start_with?("find_all_by_")
           true
         else
           super
