@@ -13,4 +13,7 @@ Gem::Specification.new do |gem|
   gem.name          = "nitron"
   gem.require_paths = ["lib"]
   gem.version       = Nitron::VERSION
+
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'nokogiri'
 end

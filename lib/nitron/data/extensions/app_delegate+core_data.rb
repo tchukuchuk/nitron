@@ -13,7 +13,7 @@ class AppDelegate
 
       error_ptr = Pointer.new(:object)
       if metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(NSSQLiteStoreType, URL:storeURL, error:error_ptr)
-        puts metadata.inspect
+        #puts metadata.inspect
       end
 
       error_ptr = Pointer.new(:object)
