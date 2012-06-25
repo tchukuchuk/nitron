@@ -5,7 +5,6 @@ unless defined?(Motion::Project::Config)
 end
 
 Motion::Project::App.setup do |app|
-  
   Dir.glob(File.join(File.dirname(__FILE__), "nitron/**/*.rb")).each do |file|
     app.files.unshift(file)
   end
@@ -21,4 +20,8 @@ Motion::Project::App.setup do |app|
   unless app.frameworks.include?("CoreData")
     app.frameworks << "CoreData"
   end
+end
+
+Dir.glob(File.join(File.dirname(__FILE__), "nitron/data/tasks/*.rake")) do |task|
+  import task
 end

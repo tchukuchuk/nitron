@@ -6,8 +6,18 @@ class AppDelegate
       documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject;
       storeURL = documentsDirectory.URLByAppendingPathComponent("#{applicationName}.sqlite")
 
+      options = {
+        NSMigratePersistentStoresAutomaticallyOption => true,
+        NSInferMappingModelAutomaticallyOption => true
+      }
+
       error_ptr = Pointer.new(:object)
-      unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:nil, error:error_ptr)
+      if metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(NSSQLiteStoreType, URL:storeURL, error:error_ptr)
+        puts metadata.inspect
+      end
+
+      error_ptr = Pointer.new(:object)
+      unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:options, error:error_ptr)
         raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
       end
 
@@ -20,8 +30,13 @@ class AppDelegate
 
   def managedObjectModel
     @managedObjectModel ||= begin
-      model = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle]).mutableCopy
+      momds = NSBundle.mainBundle.URLsForResourcesWithExtension("momd", subdirectory:".")
+      unless momds
+        return nil
+      end
 
+      model = NSManagedObjectModel.alloc.initWithContentsOfURL(momds.first)#.mutableCopy
+=begin
       model.entities.each do |entity|
         begin
           Kernel.const_get(entity.name)
@@ -31,7 +46,7 @@ class AppDelegate
           entity.setManagedObjectClassName("Model")
         end
       end
-
+=end
       model
     end
   end
