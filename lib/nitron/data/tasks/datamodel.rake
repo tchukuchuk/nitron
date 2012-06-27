@@ -1,6 +1,6 @@
 require 'fileutils'
 
-namespace :db do
+namespace :dm do
   desc "Migrates the data model by generating the schema from models"
   task :migrate do
     generated_schema = build()
@@ -38,7 +38,7 @@ namespace :db do
     end
   end
 
-  desc "Rolls the schema back to the previous version"
+  desc "Rolls the data model's schema back to a previous version"
   task :rollback do
     version = get_current_schema_version()
 

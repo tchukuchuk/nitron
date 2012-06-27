@@ -1,9 +1,2 @@
-describe "Application 'spry'" do
-  before do
-    @app = UIApplication.sharedApplication
-  end
-
-  it "has one window" do
-    @app.windows.size.should == 1
-  end
+describe "Nitron" do
 end

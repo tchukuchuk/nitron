@@ -12,7 +12,6 @@ module Nitron
           def entity_description
             @_metadata ||= UIApplication.sharedApplication.delegate.managedObjectModel.entitiesByName[name]
           end
-      
         end
     
       end
