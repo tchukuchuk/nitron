@@ -16,6 +16,38 @@ module Nitron
         groupIndex: false,
       }
     end
+    
+    # The idea behind this is that it should be possible to
+    # replace the datasource and rely on Motion's GC to
+    # clean up after us.
+    #
+    # This allows for code like:
+    #
+    #   def onFilterResults(searchText)
+    #     mutateDataSource { Task.where('name contains[ac] "foo"') }
+    #   end
+    #
+    # This method is effective for filtering, but can
+    # also be used for reordering as:
+    #
+    #    def onSortAlpha
+    #      mutateDataSource { Task.order('name[ac]') }
+    #    end
+    #
+    # N.b.: The default behavior is to reload the
+    # data, as the TableView is a data-backed control
+    # and why bother filtering or reordering if you
+    # don't plan to display? But... in the odd case
+    # where you want to do the reload yourself, simply
+    # pass +false+ as the argument to mutateDataSource
+    # and the automatic reload will be suppressed.
+    # 
+    def mutateDataSource(reload = true, &block)
+      self.class.options[:collection] = block
+      @_dataSource = evaluateDataSource
+      view.dataSource = @_dataSource
+      view.reloadData if reload
+    end
 
   protected
 
@@ -24,17 +56,19 @@ module Nitron
     end
 
     def dataSource
-      @_dataSource ||= begin
-        collection = self.instance_eval(&self.class.options[:collection])
+      @_dataSource ||= evaluateDataSource
+    end
+    
+    def evaluateDataSource
+      collection = self.instance_eval(&self.class.options[:collection])
 
-        case collection
-        when Array
-          ArrayDataSource.alloc.initWithCollection(collection, className:self.class.name)
-        when NSFetchRequest
-          CoreDataSource.alloc.initWithRequest(collection, owner:self, sectionNameKeyPath:self.class.options[:groupBy], options:self.class.options)
-        else
-          raise "Collection block must return an Array, or an NSFetchRequest"
-        end
+      case collection
+      when Array
+        ArrayDataSource.alloc.initWithCollection(collection, className:self.class.name)
+      when NSFetchRequest
+        CoreDataSource.alloc.initWithRequest(collection, owner:self, sectionNameKeyPath:self.class.options[:groupBy], options:self.class.options)
+      else
+        raise "Collection block must return an Array, or an NSFetchRequest"
       end
     end
 
