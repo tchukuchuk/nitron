@@ -42,7 +42,7 @@ module Nitron
     # pass +false+ as the argument to mutateDataSource
     # and the automatic reload will be suppressed.
     # 
-    def mutateDataSource(reload = true, &block)
+    def reload(reload = true, &block)
       self.class.options[:collection] = block
       @_dataSource = evaluateDataSource
       view.dataSource = @_dataSource
