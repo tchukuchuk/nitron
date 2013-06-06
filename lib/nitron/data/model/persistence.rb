@@ -2,13 +2,12 @@ module Nitron
   module Data
     class Model < NSManagedObject
       module Persistence
-      
         def self.included(base)
           base.extend(ClassMethods)
         end
-   
+
         module ClassMethods
-        
+
           def create(attributes={})
             begin
               model = create!(attributes)
@@ -22,7 +21,7 @@ module Nitron
             model.save!
             model
           end
-        
+
           def new(attributes={})
             alloc.initWithEntity(entity_description, insertIntoManagedObjectContext:nil).tap do |model|
               model.instance_variable_set('@new_record', true)
@@ -31,33 +30,32 @@ module Nitron
               end
             end
           end
-        
+
         end
-      
+
         def destroy
-        
           if context = managedObjectContext
             context.deleteObject(self)
             error = Pointer.new(:object)
             context.save(error)
           end
-        
+
           @destroyed = true
           freeze
         end
-      
+
         def destroyed?
           @destroyed || false
         end
-      
+
         def new_record?
           @new_record || false
         end
-      
+
         def persisted?
           !(new_record? || destroyed?)
         end
-      
+
         def save
           begin
             save!
@@ -66,8 +64,8 @@ module Nitron
           end
           true
         end
-      
-        def save!        
+
+        def save!
           unless context = managedObjectContext
             context = UIApplication.sharedApplication.delegate.managedObjectContext
             context.insertObject(self)
@@ -80,7 +78,7 @@ module Nitron
           end
           true
         end
-      
+
       end
     end
   end

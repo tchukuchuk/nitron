@@ -2,46 +2,51 @@ module Nitron
   module Data
     class Model < NSManagedObject
       module FinderMethods
-      
         def self.included(base)
           base.extend(ClassMethods)
         end
-      
+
         module ClassMethods
-        
           def all
             relation.to_a
           end
-        
+
           def count
             relation.count
           end
-          
+
           def destroy_all
             all.map &:destroy
           end
-        
+
+          def delete_all
+            context = UIApplication.sharedApplication.delegate.managedObjectContext
+            all.each { |o| context.deleteObject(o) }
+            error = Pointer.new(:object)
+            context.save(error)
+          end
+
           def except(query_part)
             relation.except(query_part)
           end
-        
+
           def find(object_id)
             raise Nitron::RecordNotFound.new(self, object_id) unless entity = find_by_id(object_id)
             entity
           end
-        
+
           def first
             relation.first
           end
-        
+
           def first!
             first or raise Nitron::RecordNotFound
           end
-        
+
           def limit(l)
             relation.limit(l)
           end
-        
+
           def method_missing(method, *args, &block)
             if method.start_with?("find_by_")
               attribute = method.gsub("find_by_", "")
@@ -53,7 +58,7 @@ module Nitron
               super
             end
           end
-        
+
           def offset(o)
             relation.offset(o)
           end
@@ -61,15 +66,15 @@ module Nitron
           def order(*args)
             relation.order(*args)
           end
-        
+
           def pluck(column)
             relation.pluck(column)
           end
-          
+
           def reorder(*args)
             relation.except(:order).order(*args)
           end
-        
+
           def respond_to?(method)
             if method.start_with?("find_by_") || method.start_with?("find_all_by_")
               true
@@ -77,7 +82,7 @@ module Nitron
               super
             end
           end
-        
+
           def uniq
             relation.uniq
           end
@@ -85,17 +90,17 @@ module Nitron
           def where(*args)
             relation.where(*args)
           end
-        
+
         private
-        
+
           def relation
             Relation.alloc.initWithClass(self)
           end
-        
-        end 
-      
+
+        end
+
       end
-      
+
     end
   end
 end
