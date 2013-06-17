@@ -23,14 +23,19 @@ module Nitron
           end
 
           def new(attributes={})
-            alloc.initWithEntity(entity_description, insertIntoManagedObjectContext:nil).tap do |model|
-              model.instance_variable_set('@new_record', true)
-              attributes.each do |keyPath, value|
-                model.setValue(value, forKey:keyPath)
-              end
-            end
+            new_in_moc(nil, attributes)
           end
 
+          def new_in_moc(moc, attributes = {})
+            alloc.initWithEntity(entity_description, insertIntoManagedObjectContext:moc).tap do |model|
+              model.instance_variable_set('@new_record', true)
+              model.attributes = attributes
+            end
+          end
+        end
+
+        def attributes=(attributes)
+          attributes.each { |keyPath, value| setValue(value, forKey:keyPath) }
         end
 
         def destroy
