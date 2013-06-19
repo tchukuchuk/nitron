@@ -3,8 +3,7 @@ class AppDelegate
     @managedObjectContext ||= begin
       applicationName = NSBundle.mainBundle.infoDictionary.objectForKey("CFBundleName")
       documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject
-      suffix = (defined?(RUBYMOTION_ENV) && RUBYMOTION_ENV == 'test' ? '-test' : nil)
-      storeURL = documentsDirectory.URLByAppendingPathComponent("#{applicationName}-#{suffix}.sqlite")
+      storeURL = documentsDirectory.URLByAppendingPathComponent("#{applicationName}.sqlite")
       error_ptr = Pointer.new(:object)
       unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:nil, error:error_ptr)
         raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
