@@ -12,6 +12,7 @@ class AppDelegate
   end
 
   def storeURL
+    puts "storeURL CALLED !"
     @storeURL ||= begin
       applicationName = NSBundle.mainBundle.infoDictionary.objectForKey("CFBundleName")
       documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject
