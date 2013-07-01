@@ -1,9 +1,6 @@
 class AppDelegate
   def managedObjectContext
     @managedObjectContext ||= begin
-      applicationName = NSBundle.mainBundle.infoDictionary.objectForKey("CFBundleName")
-      documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject
-      storeURL = documentsDirectory.URLByAppendingPathComponent("#{applicationName}.sqlite")
       error_ptr = Pointer.new(:object)
       unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:nil, error:error_ptr)
         raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
@@ -11,6 +8,14 @@ class AppDelegate
       context = NSManagedObjectContext.alloc.init
       context.persistentStoreCoordinator = persistentStoreCoordinator
       context
+    end
+  end
+
+  def storeURL
+    @storeURL ||= begin
+      applicationName = NSBundle.mainBundle.infoDictionary.objectForKey("CFBundleName")
+      documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject
+      documentsDirectory.URLByAppendingPathComponent("#{applicationName}.sqlite")
     end
   end
 
