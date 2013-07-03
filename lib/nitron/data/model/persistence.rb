@@ -35,7 +35,8 @@ module Nitron
         end
 
         def attributes=(attributes)
-          attributes.each { |keyPath, value| setValue(value, forKey:keyPath) }
+          setValuesForKeysWithDictionary(attributes)
+          #attributes.each { |keyPath, value| setValue(value, forKey:keyPath) }
         end
 
         def destroy
