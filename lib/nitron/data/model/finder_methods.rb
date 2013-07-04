@@ -94,7 +94,7 @@ module Nitron
         private
 
           def relation
-            Relation.alloc.initWithClass(self)
+            Nitron::Relation.alloc.initWithClass(self)
           end
 
         end
