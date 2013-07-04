@@ -10,10 +10,6 @@ module Nitron
           error_ptr = Pointer.new(:object)
           context.executeFetchRequest(self, error:error_ptr)
         end
-        private
-          def context
-            UIApplication.sharedApplication.delegate.managedObjectContext
-          end
       end
     end
   end
