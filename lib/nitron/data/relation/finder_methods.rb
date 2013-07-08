@@ -57,9 +57,7 @@ module Nitron
         end
 
         def order(column, opts={})
-          descriptors = sortDescriptors || []
-          descriptors << NSSortDescriptor.sortDescriptorWithKey(column.to_s, ascending:opts.fetch(:ascending, true))
-          self.sortDescriptors = descriptors
+          self.sortDescriptors = (sortDescriptors || []) + [NSSortDescriptor.sortDescriptorWithKey(column.to_s, ascending:opts.fetch(:ascending, true))]
           self
         end
 
